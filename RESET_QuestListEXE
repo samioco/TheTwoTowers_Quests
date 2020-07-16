@@ -1,0 +1,105 @@
+#CLASS 0
+$CLASS = "Tools|Quests|EXE"
+
+#AL AddQuest {
+#CLASS 0
+$QuestFullName=%0
+$QuestShortName=""
+$quotes="""
+$filecontents=""
+$filecontents_addition=""
+AddQuestFullName $QuestFullName
+AddQuestShortName
+#CLASS 0
+} $CLASS
+
+//MakeList. Can take param for adding a QuestName_FullName
+#AL AddQuestFullName {
+#CLASS 0
+$QuestFullName=%0
+$quotes="""
+$filecontents=""
+$filecontents_addition=""
+$filename="RESET_QuestListFullNames"
+$location_class = "_SYSTEM_INIT|Tools_Quests"
+$filecontents=%concat("#CLASS 0",%CR,"#VAR QuestListFullNames {} {} VAR")
+#IF (!@QuestListFullNames) {RESET_QuestListFullNames}
+#IF ($QuestFullName) {#ADDI QuestListFullNames $QuestFullName}
+#FORALL %sort(@QuestListFullNames) {
+  $QuestFullName = %i
+  $filecontents_addition=%concat("#ADDI QuestListFullNames ",$quotes,$QuestFullName,$quotes)
+  $filecontents = %concat($filecontents,%CR,$filecontents_addition)
+}
+$filecontents = %concat($filecontents,%CR,"#CLASS 0")
+#AL $filename {$filecontents} $location_class
+#EXE {$filename}
+#CLASS 0
+} $CLASS
+
+#AL AddQuestShortName {
+#CLASS 0
+$QuestFullName=%0
+$QuestShortName=""
+#IF ($QuestFullName) {
+  $QuestShortName = %replace($QuestFullName,":","_")
+  $QuestShortName = %replace($QuestShortName,".")
+  $QuestShortName = %replace($QuestShortName,"-")
+  $QuestShortName = %replace($QuestShortName,"/")
+  $QuestShortName = %replace($QuestShortName,"&")
+  $QuestShortName = %replace($QuestShortName,"'")
+  $QuestShortName = %replace($QuestShortName," ")
+}
+$quotes="""
+$filecontents=""
+$filecontents_addition=""
+$filecontents_RESET_addition=""
+$location_class = "_SYSTEM_INIT|Tools_Quests"
+$filename="RESET_QuestListShortNames"
+$filename_RESET="RESET_QuestListRESET"
+$filecontents=%concat("#CLASS 0",%CR,"#VAR QuestList {} {} VAR")
+$filecontents_RESET=%concat("#CLASS 0",%CR,"#VAR QuestListRESET {} {} VAR")
+#IF (!@QuestList) {RESET_QuestListShortNames}
+#IF (!@QuestList_RESET) {RESET_QuestListRESET}
+#IF ($QuestShortName) {
+  #ADDI QuestList $QuestShortName
+  #ADDI QuestListRESET %concat($QuestShortName,"_RESET")
+}
+#FORALL %sort(@QuestListFullNames) {
+  $QuestShortName = %i
+  $QuestShortName = %replace($QuestShortName,":","_")
+  $QuestShortName = %replace($QuestShortName,".")
+  $QuestShortName = %replace($QuestShortName,"-")
+  $QuestShortName = %replace($QuestShortName,"/")
+  $QuestShortName = %replace($QuestShortName,"&")
+  $QuestShortName = %replace($QuestShortName,"'")
+  $QuestShortName = %replace($QuestShortName," ")
+  #ADDI QuestList $QuestShortName
+  #ADDI QuestListRESET %concat($QuestShortName,"_RESET")
+}
+#FORALL %sort(@QuestList) {
+  $QuestShortName = %i
+  $filecontents_addition=%concat("#ADDI QuestList ",$quotes,$QuestShortName,$quotes)
+  $filecontents = %concat($filecontents,%CR,$filecontents_addition)
+  $filecontents_RESET_addition=%concat("#ADDI QuestListRESET ",$quotes,%concat($QuestShortName,"_RESET"),$quotes)
+  $filecontents_RESET = %concat($filecontents_RESET,%CR,$filecontents_RESET_addition)
+}
+$filecontents = %concat($filecontents,%CR,"#CLASS 0")
+$filecontents_RESET = %concat($filecontents_RESET,%CR,"#CLASS 0")
+#AL $filename {$filecontents} $location_class
+#AL $filename_RESET {$filecontents_RESET} $location_class
+#EXE {$filename;$filename_RESET}
+#CLASS 0
+} $CLASS
+
+#AL QuestsDone_AddAll {
+#CLASS 0
+#ECHO Quests Done: %numitems(@QuestsDone)
+#CR
+#ECHO @QuestsDone
+#FORALL @QuestsDone {AddQuest %1}
+#CR
+#ECHO Done Adding Tracked Quests!
+#CLASS 0
+} $CLASS
+
+#CLASS 0
