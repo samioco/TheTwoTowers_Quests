@@ -1,4 +1,4 @@
-#CLASS 0
+//RESET_QuestListEXE#CLASS 0#AL RESET_QuestListEXE {#CLASS 0
 $CLASS = "Tools|Quests|EXE"
 
 #AL AddQuest {
@@ -21,7 +21,7 @@ $quotes="""
 $filecontents=""
 $filecontents_addition=""
 $filename="RESET_QuestListFullNames"
-$location_class = "_SYSTEM_INIT|Tools_Quests"
+$location_class = "_SYSTEM_INIT|_Quests"
 $filecontents=%concat("#CLASS 0",%CR,"#VAR QuestListFullNames {} {} VAR")
 #IF (!@QuestListFullNames) {RESET_QuestListFullNames}
 #IF ($QuestFullName) {#ADDI QuestListFullNames $QuestFullName}
@@ -53,7 +53,7 @@ $quotes="""
 $filecontents=""
 $filecontents_addition=""
 $filecontents_RESET_addition=""
-$location_class = "_SYSTEM_INIT|Tools_Quests"
+$location_class = "_SYSTEM_INIT|_Quests"
 $filename="RESET_QuestListShortNames"
 $filename_RESET="RESET_QuestListRESET"
 $filecontents=%concat("#CLASS 0",%CR,"#VAR QuestList {} {} VAR")
@@ -102,4 +102,4 @@ $filecontents_RESET = %concat($filecontents_RESET,%CR,"#CLASS 0")
 #CLASS 0
 } $CLASS
 
-#CLASS 0
+#CLASS 0} _Quests#CLASS 0

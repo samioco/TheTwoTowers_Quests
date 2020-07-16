@@ -1,4 +1,4 @@
-#CLASS 0
+//RESET_QuestsEXE#CLASS 0#AL RESET_QuestsEXE {#CLASS 0
 #IF (%alias(RESET_QuestListFullNames)) {RESET_QuestListFullNames}
 #IF (%alias(RESET_QuestListShortNames)) {RESET_QuestListShortNames}
 #CLASS 0
@@ -133,3 +133,4 @@ QuestStop
 } $CLASS
 
 #CLASS 0
+} _Quests#CLASS 0

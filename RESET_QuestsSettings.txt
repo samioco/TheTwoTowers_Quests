@@ -1,4 +1,4 @@
-#CLASS 0
+//RESET_QuestsSettings#CLASS 0#AL RESET_QuestsSettings {#CLASS 0
 #VAR QuestsDone {} {} VAR
 
 $CLASS = "Tools|Quests|Settings"
@@ -46,4 +46,4 @@ $quest=%trim(%1)
 #T- QuestsDone_End
 #T- QuestsDone_More
 #T- QuestsDone_Read
-#CLASS 0
+#CLASS 0} _Quests#CLASS 0

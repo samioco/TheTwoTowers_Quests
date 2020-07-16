@@ -1,4 +1,4 @@
-#CLASS 0
+//RESET_QuestListInitialize#CLASS 0#AL RESET_QuestListInitialize {#CLASS 0
 $CLASS = "Tools|Quests|EXE"
 
 #AL QuestInitialize {
@@ -6,7 +6,7 @@ $Quest=%0
 $ParentClass="QuestLibrary"
 $contents=""
 $quotes="""
-$SystemClass="_SYSTEM_INIT|Tools_QuestLibrary"
+$SystemClass="_SYSTEM_INIT|_QuestLibrary"
 #CLASS 0
 #CLASS %concat($ParentClass,"|",$Quest)
 #CLASS 0
@@ -61,7 +61,7 @@ $QuestReset=%concat($Quest,"_RESET")
 $ParentClass="QuestList"
 $contents=""
 $quotes="""
-$CLASSFolder="Tools_QuestLibrary"
+$CLASSFolder="_QuestLibrary"
 $FileName="QuestLibrary"
 $FileName=%concat($FileName,".txt")
 $FileContents=""
@@ -107,4 +107,4 @@ QuestReset %0
 QuestListInitializeAll
 } $CLASS
 
-#CLASS 0
+#CLASS 0} _Quests#CLASS 0

@@ -1,4 +1,4 @@
-#CLASS 0
+//RESET_QuestListShortNames#CLASS 0#AL RESET_QuestListShortNames {#CLASS 0
 #VAR QuestList {} {} VAR
 #ADDI QuestList "Adornas_BlackHorse"
 #ADDI QuestList "Adornas_HallasCane"
@@ -697,4 +697,4 @@
 #ADDI QuestList "WRohan_FreeingthePrisoner"
 #ADDI QuestList "WRohan_Panniers"
 #ADDI QuestList "WRohan_WhiteStallion"
-#CLASS 0
+#CLASS 0} _Quests#CLASS 0

@@ -1,4 +1,4 @@
-#CLASS 0
+//RESET_QuestListFullNames#CLASS 0#AL RESET_QuestListFullNames {#CLASS 0
 #VAR QuestListFullNames {} {} VAR
 #ADDI QuestListFullNames "Adornas: Black Horse"
 #ADDI QuestListFullNames "Adornas: Halla's Cane"
@@ -682,4 +682,4 @@
 #ADDI QuestListFullNames "White Towers: Alchemy Recipe"
 #ADDI QuestListFullNames "White Towers: FR Lvl 10 Quest"
 #ADDI QuestListFullNames "White Towers: Levitate Spell"
-#CLASS 0
+#CLASS 0} _Quests#CLASS 0
