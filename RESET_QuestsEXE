@@ -1,0 +1,135 @@
+#CLASS 0
+#IF (%alias(RESET_QuestListFullNames)) {RESET_QuestListFullNames}
+#IF (%alias(RESET_QuestListShortNames)) {RESET_QuestListShortNames}
+#CLASS 0
+
+$CLASS = "Tools|Quests|EXE"
+
+#AL QuestEXE {
+$Quest=%0
+QuestInitialize $Quest
+#EXE {$Quest}
+} $CLASS
+
+#AL QuestInit {
+MyProfileVars
+$QuestName = %1
+$questLocation = %2
+$questaction = %3
+QuestInitialize $QuestName
+#VAR QuestName {$QuestName} {} VAR
+GrinderQueue_Sell
+ActionAdd %concat("sss;QuestOn ",$QuestName,";",$questaction)
+#IF (!@MyWep) {ActionAdd "i;ActionNext"}
+#IF ($questLocation) {ActionAdd %concat("#WALK ",$questLocation,";ActionNext")}
+#T+ QuestCompleted
+} $CLASS
+
+#AL QuestComplete {
+#T- QuestCompleted
+#UNT Alarm_Rest
+#FORALL "CurMob|CurRoom|iMob|iRoom" {#VAR %i {} {} VAR}
+ActionDelete GrinderNextMob
+ActionDelete GrinderCurMob
+$EXE = ""
+#IF ((!@ActionQueue) AND (@GrinderQueue_i)) {ActionAdd "GrinderNextSet"}
+SysMsg Quest Completed, SetsEnabled: @SetsEnabled
+$EXE = "QuestOff"
+#IF (%0) {$EXE = %concat($EXE," ",%0)}
+$EXE = %concat($EXE,";ActionNext")
+ActionAdd $EXE
+PlayerDetectOff
+#IF (@ActionQueue) {ActionNext}
+} $CLASS
+
+#AL QuestAbort {
+#UNT Alarm_rest;#VAR CurMob {} {} VAR;#VAR CurRoom {} {} VAR;#VAR iMob {} {} VAR;#VAR iRoom {} {} VAR
+ActionDelete GrinderNextMob
+ActionDelete GrinderCurMob
+$EXE = ""
+#IF ((!@ActionQueue) AND (@GrinderQueue_i)) {ActionAdd "GrinderNextSet"}
+SysMsg Quest Aborted, SetsEnabled: @SetsEnabled
+$EXE = "QuestOff"
+#IF (%0) {$EXE = %concat($EXE," ",%0)}
+$EXE = %concat($EXE,";ActionNext")
+ActionAdd $EXE
+$delay=%random(2,5)
+#IF (@GrinderQueue_i) {SysMsg QuestAbort. Closed Quest @QuestName. Next action in $delay second(s)...;#WAIT $delay*1000}
+#IF (@ActionQueue) {ActionNext}
+} $CLASS
+
+
+#AL QuestOn {
+INFO Executing: QuestOn...
+QuestOff
+#IF (%0) {
+  #VAR QuestName {%0} {} VAR
+  #ADDI QuestList @QuestName
+}
+ClassOn @QuestName
+#T+ QuestCompleted
+#IF (!@SetsEnabled) {#VAR SetsEnabled {} {} VAR}
+#ADDI SetsEnabled @QuestName
+SysMsg Enabled Sets: @SetsEnabled
+SysMsg Enabling Set Class: @QuestName
+} $CLASS
+
+#AL QuestOff {
+INFO Executing: QuestOff...
+#IF (%0) {
+  INFO Disabling %0
+  #ADDI QuestList %0
+  #DELI SetsEnabled %0
+  ClassOff %0
+  INFO Disabled %0
+}
+#FORALL @SetsEnabled {
+  #ADDI QuestList %i
+  #DELI SetsEnabled %i
+  ClassOff %i
+  INFO Disabled: %i
+}
+#FORALL @QuestList {#DELI SetsEnabled %i;ClassOff %i}
+#T- QuestCompleted
+} $CLASS
+
+#AL QuesterCheck {
+MyProfileVars
+#IF ((%1) AND (%isnumber(%2)) AND (%isnumber(%3))) {
+  $quest=%1
+  $level_min=%2
+  $level_max=%3
+  //#IF ((@MyTrueLevel>=$level_min) AND (@MyTrueLevel<=$level_max)) {#ADDKEY QuesterCheck 1 $quest}
+  #IF ((@MyTrueLevel>=$level_min) AND (@MyTrueLevel<=$level_max)) {
+    #VAR QuesterCheck {$quest} {} VAR
+    SysMsg QuesterCheck: Success: $quest
+  } {SysMsg QuesterCheck: Fail: $quest}
+}
+} $CLASS
+
+#AL QuesterCheck {
+MyProfileVars
+#IF ((%1) AND (%isnumber(%2)) AND (%isnumber(%3))) {
+  $quest=%1
+  $level_min=%2
+  $level_max=%3
+  //#IF ((@MyTrueLevel>=$level_min) AND (@MyTrueLevel<=$level_max)) {#ADDKEY QuesterCheck 1 $quest}
+  #IF ((@MyTrueLevel>=$level_min) AND (@MyTrueLevel<=$level_max)) {
+    #VAR QuesterCheck {$quest} {} VAR
+    SysMsg QuesterCheck: Success: $quest
+  } {SysMsg QuesterCheck: Fail: $quest}
+}
+} $CLASS
+
+#AL QuestStop {
+#VAR GrinderQueue_i {0} {} VAR
+QuestOff;BotOff
+StopWalk;ActionClear;GrinderSTOP
+SysMsg Grinder Stopped
+} $CLASS
+
+#AL QStop {
+QuestStop
+} $CLASS
+
+#CLASS 0
