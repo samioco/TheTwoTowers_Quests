@@ -1,0 +1,14 @@
+#CLASS 0
+RESET_QuestsEXE
+RESET_QuestsSettings
+RESET_QuestListEXE
+
+RESET_QuestListInitialize
+RESET_QuestListFullNames
+
+AddQuestShortName
+RESET_QuestListShortNames
+RESET_QuestListRESET
+
+QuestOff
+#CLASS 0
