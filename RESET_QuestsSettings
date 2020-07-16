@@ -1,0 +1,49 @@
+#CLASS 0
+#VAR QuestsDone {} {} VAR
+
+$CLASS = "Tools|Quests|Settings"
+#VAR QuestName {} {} VAR
+#VAR SetsEnabled {} {} VAR
+
+#TR QuestCompleted {~[ You have completed a quest: %1 ~]} {
+#IF (!%pos("Shelob's Lair",%zonename())) {QuestComplete}
+} $CLASS
+#T- QuestCompleted
+
+#TR QuestListAdd {~[ You have completed a quest: %1 ~]} {
+AddQuest %1
+} $CLASS
+
+//Quests Done
+#TR QuestsDone_Start {^#%s|%sQuest%s|%s#%sDone} {
+#VAR QuestsDone {} {} VAR
+#T+ QuestsDone_More
+#T+ QuestsDone_Read
+#T+ QuestsDone_End
+} $CLASS
+
+#TR QuestsDone_More {--More--} {#CR} $CLASS
+#T- QuestsDone_More
+
+
+#TR QuestsDone_Read {^{%s|}%d%s|%s{~*|}%1%s|%s(%d)} {
+$quest=%trim(%1)
+#IF (!@{%concat(@MyName,"_QuestList")}) {#VAR %concat(@MyName,"_QuestList") {} {} @MyName}
+#ADDI %concat(@MyName,"_QuestList") $quest
+#ADDI QuestsDone $quest
+//QuestList_AddQuest $quest
+} $CLASS
+
+#TR QuestsDone_End {^Total tracked quests done:%s(%d)} {
+#T- QuestsDone_End
+#T- QuestsDone_More
+#T- QuestsDone_Read
+#VAR %concat(@MyName,"_Tracked_QuestsDone") {%trim(%1)} {} @MyName
+//QuestsDone_AddAll
+} $CLASS
+
+
+#T- QuestsDone_End
+#T- QuestsDone_More
+#T- QuestsDone_Read
+#CLASS 0
