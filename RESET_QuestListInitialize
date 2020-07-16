@@ -1,0 +1,110 @@
+#CLASS 0
+$CLASS = "Tools|Quests|EXE"
+
+#AL QuestInitialize {
+$Quest=%0
+$ParentClass="QuestLibrary"
+$contents=""
+$quotes="""
+$SystemClass="_SYSTEM_INIT|Tools_QuestLibrary"
+#CLASS 0
+#CLASS %concat($ParentClass,"|",$Quest)
+#CLASS 0
+#ADDI QuestList $Quest
+AddQuestShortName $Quest
+#SW (%alias(%concat($Quest,"_RESET"))) {
+  CleanUpAlias $SystemClass %concat($Quest,"_RESET")
+  $contents=%alias(%concat($Quest,"_RESET"))
+  $contents=%replace($contents,%concat("QuestInit ",$Quest),"QuestInit $QuestName")
+  $contents=%replace($contents,%concat("QuesterCheck ",$Quest),"QuesterCheck $QuestName")
+  $contents=%replace($contents,%concat("} ",$Quest,"|Settings"),"} $Settings")
+  $contents=%replace($contents,%concat("} $QuestName|Settings"),"} $Settings")
+  $contents=%replace($contents,%concat("} ",$Quest),"} $QuestName")
+  #AL %concat($Quest,"_RESET") {$contents} $SystemClass
+  #ECHO Quest Initialized: %concat($Quest,"_RESET")
+  QuestReset $Quest
+} (%ismember($Quest,@QuestList)) {
+  $contents=%concat("$QuestName=",$quotes,$Quest,$quotes,%CR,"$Settings=%concat($QuestName,""|Settings"")",%CR)
+  $contents=%concat($contents,"//------------------------------------------------------------",%CR)
+  $contents=%concat($contents,"//Quest Name: ",$Quest,%CR)
+  $contents=%concat($contents,"//Description: ",%CR)
+  $contents=%concat($contents,"//------------------------------------------------------------",%CR)
+  $contents=%concat($contents,"//Requirements: ",%CR)
+  $contents=%concat($contents,"//Recommended level:  ",%CR)
+  $contents=%concat($contents,"//Reward: ",%CR)
+  $contents=%concat($contents,"//------------------------------------------------------------",%CR)
+  $contents=%concat($contents,"//Settings:",%CR)
+  $contents=%concat($contents,"//------------------------------------------------------------",%CR)
+  $contents=%concat($contents,%CR)
+  $contents=%concat($contents,%CR)
+  $contents=%concat($contents,%CR)
+  $contents=%concat($contents,"//------------------------------------------------------------",%CR)
+  $contents=%concat($contents,"//------------------------------------------------------------",%CR)
+  #AL %concat($Quest,"_RESET") {$contents} $SystemClass
+}
+ClassOff $Quest
+} $CLASS
+
+#AL QuestReset {
+$Quest=%0
+$QuestReset=%concat($Quest,"_RESET")
+#IF (%alias($QuestReset)) {
+  #EXE {$QuestReset}
+  #ECHO Quest Reset: %concat($Quest,"_RESET")
+} {
+  #ECHO $QuestReset does not exist.
+}
+
+} $CLASS
+
+#AL QuestListInitializeAll {
+$ParentClass="QuestList"
+$contents=""
+$quotes="""
+$CLASSFolder="Tools_QuestLibrary"
+$FileName="QuestLibrary"
+$FileName=%concat($FileName,".txt")
+$FileContents=""
+$AliasName=""
+$Quest=""
+#FILE 1 $FileName
+#ERASE 1
+#FILE 1 $FileName
+$FileContents=%concat("//",$FileName,%CR,"#CLASS 0",%CR)
+#WRITE 1 $FileContents
+#FORALL @QuestList {
+  $Quest=%i
+  $AliasName = $Quest
+  QuestInitialize $Quest
+  $AliasName=%concat($Quest,"_RESET")
+  $FileContents=%concat(%CR,"//",$Quest,%CR,"#AL ")
+  $FileContents=%concat($FileContents,$AliasName)
+  $FileContents=%concat($FileContents," {",%CR)
+  $FileContents=%concat($FileContents,%alias($AliasName))
+  $FileContents=%concat($FileContents,%CR,"} ",$CLASSFolder,%CR,"#CLASS 0",%CR)
+  #WRITE 1 $FileContents
+  //QuestReset $Quest
+}
+$FileContents=%concat(%CR,"//",$FileName,%CR,"#CLASS 0",%CR)
+#WRITE 1 $FileContents
+#CLOSE 1
+#CLASS 0
+#CR
+#ECHO QuestListInitializeAll Completed!
+} $CLASS
+
+#AL QI {
+#IF (%lower(%0)="all") {
+  QuestListInitializeAll
+} {QuestInitialize %0}
+} $CLASS
+
+#AL QR {
+QuestReset %0
+} $CLASS
+
+#AL QI_ALL {
+QuestListInitializeAll
+} $CLASS
+
+#CLASS 0
