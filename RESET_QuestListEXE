@@ -59,7 +59,7 @@ $filename_RESET="RESET_QuestListRESET"
 $filecontents=%concat("#CLASS 0",%CR,"#VAR QuestList {} {} VAR")
 $filecontents_RESET=%concat("#CLASS 0",%CR,"#VAR QuestListRESET {} {} VAR")
 #IF (!@QuestList) {RESET_QuestListShortNames}
-#IF (!@QuestList_RESET) {RESET_QuestListRESET}
+#IF (!@QuestListRESET) {RESET_QuestListRESET}
 #IF ($QuestShortName) {
   #ADDI QuestList $QuestShortName
   #ADDI QuestListRESET %concat($QuestShortName,"_RESET")
